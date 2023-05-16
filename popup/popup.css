@@ -1,5 +1,6 @@
 body {
-  width: 250px;
+  width: 500px;
+  margin: 0px;
 }
 
 #notify-wrapper {
@@ -68,4 +69,29 @@ textarea {
 
 .notify-buttons p {
   margin: 10px 0 5px 10px;
+}
+
+
+.van-footer {
+  background-color: #f0f0f0;
+  color: #636363;
+  font-size: 11px;
+  padding: 10px;
+  margin-top: 9px;
+  text-align: center;
+}
+
+.van-a {
+  color: #4285f4;
+  display: inline;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.van-a:hover {
+  text-decoration: underline;
+}
+
+#about-link {
+  text-align: right;
 }

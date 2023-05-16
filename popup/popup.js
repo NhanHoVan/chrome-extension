@@ -34,7 +34,7 @@
   };
 
   //Go to Options page
-  select("#go-to-options").addEventListener("click", function () {
+  select("#options-link").addEventListener("click", function () {
     if (RUNTIME.openOptionsPage) {
       RUNTIME.openOptionsPage();
     } else {
