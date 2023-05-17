@@ -1,5 +1,67 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500&display=swap");
+
+:root {
+  --white: #ffffff;
+  --text-size: 12px;
+  --text-color: #636363;
+  --link-color: #4285f4;
+  --bgr-color: #f0f0f0;
+  --bgr-color-btn: #4285f4;
+  --border-color: #b7b7b7;
+}
 
 body {
-    font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
+  margin: 0px;
+  font-size: 11px;
+  color: var(--text-color);
+}
+
+.button {
+  border: none;
+  font-size: var(--text-size);
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.button:hover {
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  box-shadow: 0px 1px 2px 0px var(--border-color);
+}
+
+.button.primary {
+  color: var(--white);
+  margin-left: 5px;
+  background-color: var(--bgr-color-btn);
+}
+
+a {
+  color: var(--link-color);
+  display: inline;
+  font-size: var(--text-size);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.header {
+  padding: 5px 10px;
+  background-color: var(--bgr-color);
+}
+
+.containers {
+  padding: 20px 10px;
+}
+
+.footer {
+  background-color: var(--bgr-color);
+  color: var(--text-color);
+  font-size: 11px;
+  padding: 10px;
+  text-align: center;
 }

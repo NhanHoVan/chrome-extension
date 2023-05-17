@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "My Extension",
+  "name": "Multi-VN Extension",
   "description": "Add the reading time to Chrome Extension documentation articles",
   "version": "1.0.1",
   "icons": {
