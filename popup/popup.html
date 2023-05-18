@@ -7,18 +7,30 @@
     <div class="containers">
       <div class="van-block">
         <div class="van-form">
-          <form action="/a...">
-            <label for="text">Notification</label>
+          <form>
+            <div class="title">
+              <span>Notification</span>
+            </div>
             <textarea
               name="text"
               id="van-text"
               placeholder="Let's notify!"
             ></textarea>
-            <input type="date" id="date" name="date" />
-            <input type="time" id="appt" name="appt" />
-            <div class="notify-buttons">
-              <button class="button" type="reset" id="notify-reset">Reset</button>
-              <button class="button primary" type="submit" id="notify-save">Save</button>
+            <div class="row-form">
+              <div class="date-time">
+                <input type="date" id="date" name="date" />
+                <input type="time" id="appt" name="appt" />
+              </div>
+              <div class="notify-buttons">
+                <button class="button" type="reset" id="notify-reset">Reset</button>
+                <button class="button primary" type="submit" id="notify-save">Save</button>
+              </div>
+            </div>
+            <div class="row-form">
+              <details>
+                <summary>Total</summary>
+                <p>Detailed content goes here …</p>
+              </details>
             </div>
           </form>
         </div>
