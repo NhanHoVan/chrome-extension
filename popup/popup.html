@@ -7,27 +7,37 @@
     <div class="containers">
       <div class="van-block">
         <div class="van-form">
-          <label for="text">Notification</label>
-          <textarea
-            name="text"
-            id="van-text"
-            placeholder="Let's notify!"
-          ></textarea>
-        </div>
-        <div class="notify-buttons">
-          <button class="button" id="notify-reset">Reset</button>
-          <button class="button primary" id="notify-save">Save</button>
+          <form action="/a...">
+            <label for="text">Notification</label>
+            <textarea
+              name="text"
+              id="van-text"
+              placeholder="Let's notify!"
+            ></textarea>
+            <input type="date" id="date" name="date" />
+            <input type="time" id="appt" name="appt" />
+            <div class="notify-buttons">
+              <button class="button" type="reset" id="notify-reset">Reset</button>
+              <button class="button primary" type="submit" id="notify-save">Save</button>
+            </div>
+          </form>
         </div>
       </div>
-      <div class="van-block">
-        
-      </div>
+      <div class="van-block"></div>
     </div>
     <footer class="footer">
       <div id="autoOption"></div>
       © <span id="year">2023</span> VanNhan -
-        <a id="options-link" target="_blank" href="../options/options.html">Tùy chọn tiện ích mở rộng</a> -
-        <a id="about-link" target="_blank" href="https://nhanhovan.github.io/iamvannhan/">I am VanNhan</a>
+      <a id="options-link" target="_blank" href="../options/options.html"
+        >Tùy chọn tiện ích mở rộng</a
+      >
+      -
+      <a
+        id="about-link"
+        target="_blank"
+        href="https://nhanhovan.github.io/iamvannhan/"
+        >I am VanNhan</a
+      >
     </footer>
     <!-- <script type="module" src="popup.js"></script> -->
   </body>
