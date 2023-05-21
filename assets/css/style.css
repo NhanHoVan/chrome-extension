@@ -6,7 +6,8 @@
   --text-color: #636363;
   --link-color: #4285f4;
   --bgr-color: #f0f0f0;
-  --bgr-color-btn: #4285f4;
+  --bgr-color-primary: #4285f4;
+  --bgr-color-danger: #ff0000;
   --border-color: #b7b7b7;
 }
 
@@ -33,7 +34,12 @@ body {
 
 .button.primary {
   color: var(--white);
-  background-color: var(--bgr-color-btn);
+  background-color: var(--bgr-color-primary);
+}
+
+.button.danger {
+  color: var(--white);
+  background-color: var(--bgr-color-danger);
 }
 
 a {
@@ -63,7 +69,7 @@ textarea:focus-visible, input:focus-visible {
 }
 
 .containers {
-  padding: 20px 10px;
+  padding: 20px 10px 5px;
 }
 
 .title {

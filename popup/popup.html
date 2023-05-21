@@ -7,32 +7,29 @@
     <div class="containers">
       <div class="van-block">
         <div class="van-form">
-          <form>
-            <div class="title">
-              <span>Notification</span>
+          <div class="title">
+            <span>Notification</span>
+          </div>
+          <textarea
+            name="text"
+            id="notify-mess"
+            placeholder="Notification message!"
+          ></textarea>
+          <div class="row-form">
+            <div class="date-time">
+              <input type="datetime-local" id="notify-date"/>
             </div>
-            <textarea
-              name="text"
-              id="van-text"
-              placeholder="Let's notify!"
-            ></textarea>
-            <div class="row-form">
-              <div class="date-time">
-                <input type="date" id="date" name="date" />
-                <input type="time" id="appt" name="appt" />
-              </div>
-              <div class="notify-buttons">
-                <button class="button" type="reset" id="notify-reset">Reset</button>
-                <button class="button primary" type="submit" id="notify-save">Save</button>
-              </div>
+            <div class="notify-buttons">
+              <button class="button primary" id="notify-save">Save</button>
+              <button class="button danger" id="notify-reset">Reset All</button>
             </div>
-            <div class="row-form">
-              <details>
-                <summary>Total</summary>
-                <p>Detailed content goes here …</p>
-              </details>
+          </div>
+          <div class="row-form list-notification">
+            <div class="note-label">
+              <p><span id="notify-count"></span> notification</p>
             </div>
-          </form>
+            <div id="notify-list"></div>
+          </div>
         </div>
       </div>
       <div class="van-block"></div>
@@ -51,6 +48,7 @@
         >I am VanNhan</a
       >
     </footer>
-    <!-- <script type="module" src="popup.js"></script> -->
+    <script src="../assets/js/moment.js"></script>
+    <script src="popup.js"></script>
   </body>
 </html>
