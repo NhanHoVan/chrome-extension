@@ -32,13 +32,13 @@
   };
 
   //Go to Options page
-  select("#options-link").addEventListener("click", function () {
-    if (RUNTIME.openOptionsPage) {
-      RUNTIME.openOptionsPage();
-    } else {
-      window.open(RUNTIME.getURL("options.html"));
-    }
-  });
+  // select("#options-link").addEventListener("click", function () {
+  //   if (RUNTIME.openOptionsPage) {
+  //     RUNTIME.openOptionsPage();
+  //   } else {
+  //     window.open(RUNTIME.getURL("options.html"));
+  //   }
+  // });
 
   // var timeInput = document.getElementById('timeInput').value;
   // var messageInput = document.getElementById('messageInput').value;
@@ -86,18 +86,53 @@
   const messageInput = getElement("notify-mess");
   const notifyList = getElement("notify-list");
 
+  const getTimeDefault = () => {
+    var now = new Date();
+    now.setHours(now.getHours() + 1);
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    now.setMilliseconds(null);
+    now.setSeconds(null);
+    return now.toISOString().slice(0, -1);
+  }
+
   const resetInput = () => {
-    messageInput.value = "";
-    timeInput.value = "";
+    messageInput.value = messageInput.defaultValue;
+    timeInput.value = getTimeDefault();
   };
 
   const resetStorage = () => {
     STORAGE.local.clear();
-    messageInput.value = "";
-    timeInput.value = "";
+    messageInput.value = messageInput.defaultValue;
+    timeInput.value = getTimeDefault();
     counter.innerHTML = 0;
     notifyList.innerHTML = "";
   };
+
+  const deleteFn = () => {
+    const element = getElement("close-button", "class");
+    for (let i = 0; i < element.length; i++) {
+      let eleId = element[i].getAttribute("id");
+      element[i].addEventListener("click", () => {
+        STORAGE.local.get(["notifications"], (data) => {
+          let notifications = data.notifications
+            ? JSON.parse(data.notifications)
+            : [];
+          let itemId = notifications.findIndex(obj => obj.id.toString() === eleId.slice(6))
+          if (itemId > -1) {
+            notifications.splice(itemId, 1);
+          }
+          STORAGE.local.set({ notifications: JSON.stringify(notifications) });
+          assignInnerHtml(notifications);
+        });
+      });
+    }
+  };
+
+  const assignInnerHtml = (data) => {
+    notifyList.innerHTML = notificationsListTemplate(data);
+    counter.innerHTML = data.length;
+    deleteFn();
+  }
 
   const notificationsListTemplate = (data) => {
     let str = "<ul>";
@@ -112,7 +147,6 @@
     return str.concat("</ul>");
   };
 
-  //Save-Get Notifications
   getElement("notify-save").addEventListener("click", () => {
     let selectedTime = new Date(timeInput.value);
     if (selectedTime.getTime() <= Date.now()) {
@@ -128,8 +162,7 @@
           message: messageInput.value,
         };
         notifications.push(notificationData);
-        notifyList.innerHTML = notificationsListTemplate(notifications);
-        counter.innerHTML = notifications.length;
+        assignInnerHtml(notifications);
         STORAGE.local.set({ notifications: JSON.stringify(notifications) });
         resetInput();
       });
@@ -140,33 +173,14 @@
     resetStorage();
   });
 
-  window.addEventListener("load", function () {
-    //Get Data Start Extension.
-    STORAGE.local.get(["notifications"], (data) => {
-      let notifications = data.notifications
-        ? JSON.parse(data.notifications)
-        : [];
-      counter.innerHTML = notifications.length;
-      notifyList.innerHTML = notificationsListTemplate(notifications);
-    });
+  STORAGE.local.get(["notifications"], (data) => {
+    let notifications = data.notifications
+      ? JSON.parse(data.notifications)
+      : [];
+    assignInnerHtml(notifications);
+  });
 
-    const element = getElement("close-button", "class");
-    for (let i = 0; i < element.length; i++) {
-      let eleId = ele.getAttribute("id");
-      element[i].addEventListener("click", () => {
-        alert('ele');
-        STORAGE.local.get(["notifications"], (data) => {
-          let notifications = data.notifications
-            ? JSON.parse(data.notifications)
-            : [];
-          let itemId = notifications.findIndex(obj => obj.id === eleId.slice(6))
-          if (itemId > -1) {
-            notifications.splice(itemId, 1);
-          }
-          counter.innerHTML = notifications.length;
-          STORAGE.local.set({ notifications: JSON.stringify(notifications) });
-        });
-      });
-    }
+  window.addEventListener('load', () => {
+    getElement("notify-date").value = getTimeDefault();
   });
 })();
