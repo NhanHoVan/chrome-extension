@@ -31,56 +31,6 @@
     }
   };
 
-  //Go to Options page
-  // select("#options-link").addEventListener("click", function () {
-  //   if (RUNTIME.openOptionsPage) {
-  //     RUNTIME.openOptionsPage();
-  //   } else {
-  //     window.open(RUNTIME.getURL("options.html"));
-  //   }
-  // });
-
-  // var timeInput = document.getElementById('timeInput').value;
-  // var messageInput = document.getElementById('messageInput').value;
-
-  // var selectedTime = new Date(timeInput);
-
-  // if (selectedTime.getTime() < Date.now()) {
-  //   alert('Thời gian đã chọn đã qua.');
-  // } else {
-  //   var notificationData = {
-  //     time: selectedTime.getTime(),
-  //     message: messageInput
-  //   };
-
-  //   var existingData = localStorage.getItem('notifications');
-  //   var notifications = existingData ? JSON.parse(existingData) : [];
-
-  //   notifications.push(notificationData);
-
-  //   localStorage.setItem('notifications', JSON.stringify(notifications));
-
-  //   var delay = selectedTime.getTime() - Date.now();
-
-  //   setTimeout(function() {
-  //     if ('Notification' in window) {
-  //       Notification.requestPermission().then(function(permission) {
-  //         if (permission === 'granted') {
-  //           var storedData = localStorage.getItem('notifications');
-  //           var storedNotifications = storedData ? JSON.parse(storedData) : [];
-  //           storedNotifications.forEach(function(notification) {
-  //             if (notification.time === selectedTime.getTime()) {
-  //               var notification = new Notification('Tin nhắn mới', { body: notification.message });
-  //               storedNotifications.splice(storedNotifications.indexOf(notification), 1);
-  //             }
-  //           });
-  //           localStorage.setItem('notifications', JSON.stringify(storedNotifications));
-  //         }
-  //       });
-  //     }
-  //   }, delay);
-  // }
-
   const counter = getElement("notify-count");
   const timeInput = getElement("notify-date");
   const messageInput = getElement("notify-mess");
@@ -117,12 +67,12 @@
           let notifications = data.notifications
             ? JSON.parse(data.notifications)
             : [];
-          let itemId = notifications.findIndex(obj => obj.id.toString() === eleId.slice(6))
+          let itemId = notifications.findIndex(obj => obj.id.toString() === eleId.slice(6));
           if (itemId > -1) {
             notifications.splice(itemId, 1);
+            STORAGE.local.set({ notifications: JSON.stringify(notifications) });
+            assignInnerHtml(notifications);
           }
-          STORAGE.local.set({ notifications: JSON.stringify(notifications) });
-          assignInnerHtml(notifications);
         });
       });
     }
@@ -147,40 +97,69 @@
     return str.concat("</ul>");
   };
 
-  getElement("notify-save").addEventListener("click", () => {
-    let selectedTime = new Date(timeInput.value);
-    if (selectedTime.getTime() <= Date.now()) {
-      alert("The time selected has passed.");
-    } else {
-      STORAGE.local.get("notifications", (data) => {
-        let notifications = data.notifications
-          ? JSON.parse(data.notifications)
-          : [];
-        let notificationData = {
-          id: notifications.length + 1,
-          time: selectedTime.getTime(),
-          message: messageInput.value,
-        };
-        notifications.push(notificationData);
-        assignInnerHtml(notifications);
-        STORAGE.local.set({ notifications: JSON.stringify(notifications) });
-        resetInput();
-      });
-    }
-  });
+  const sortNotification = (data) => {
+    data.sort((a,b)=> a.time - b.time);
+  }
 
-  getElement("notify-reset").addEventListener("click", () => {
-    resetStorage();
-  });
+  const sendNotification = (notifications) => {
+    if (notifications.length > 0) {
+      let notify = notifications[0];
+      let delay = notify.time - Date.now();
+      setTimeout(function() {
+        RUNTIME.sendMessage( '', {
+          type: 'notification',
+          message: notify.message
+        });
+        notifications.splice(notifications.indexOf(notify), 1);
+        STORAGE.local.set({ notifications: JSON.stringify(notifications) });
+        assignInnerHtml(notifications);
+      }, delay);
+    }
+  }
 
   STORAGE.local.get(["notifications"], (data) => {
     let notifications = data.notifications
       ? JSON.parse(data.notifications)
       : [];
     assignInnerHtml(notifications);
+    sendNotification(notifications);
+  });
+
+  STORAGE.onChanged.addListener( ( changes, namespace ) => {
+    if ( changes.notifications ) {
+      let notifications = changes?.notifications.newValue
+      notifications ? sendNotification(JSON.parse(notifications)) : null;
+    }
   });
 
   window.addEventListener('load', () => {
     getElement("notify-date").value = getTimeDefault();
+
+    getElement("notify-save").addEventListener("click", () => {
+      let selectedTime = new Date(timeInput.value);
+      if (selectedTime.getTime() <= Date.now()) {
+        alert("The time selected has passed.");
+      } else {
+        STORAGE.local.get("notifications", (data) => {
+          let notifications = data.notifications
+            ? JSON.parse(data.notifications)
+            : [];
+          let notificationData = {
+            id: notifications.length + 1,
+            time: selectedTime.getTime(),
+            message: messageInput.value,
+          };
+          notifications.push(notificationData);
+          sortNotification(notifications);
+          assignInnerHtml(notifications);
+          STORAGE.local.set({ notifications: JSON.stringify(notifications) });
+          resetInput();
+        });
+      }
+    });
+  
+    getElement("notify-reset").addEventListener("click", () => {
+      resetStorage();
+    });
   });
 })();
