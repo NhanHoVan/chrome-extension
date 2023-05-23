@@ -86,9 +86,9 @@
   const messageInput = getElement("notify-mess");
   const notifyList = getElement("notify-list");
 
-  const getTimeDefault = () => {
+  const getTimeDefault = (number = 1) => {
     var now = new Date();
-    now.setHours(now.getHours() + 1);
+    now.setHours(now.getHours() + number);
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     now.setMilliseconds(null);
     now.setSeconds(null);
@@ -102,10 +102,10 @@
 
   const resetStorage = () => {
     STORAGE.local.clear();
-    messageInput.value = messageInput.defaultValue;
-    timeInput.value = getTimeDefault();
     counter.innerHTML = 0;
     notifyList.innerHTML = "";
+    messageInput.value = messageInput.defaultValue;
+    timeInput.value = getTimeDefault();
   };
 
   const deleteFn = () => {
