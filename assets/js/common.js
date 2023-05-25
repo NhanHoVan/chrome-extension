@@ -1,6 +1,7 @@
 const ELEMENT = document.documentElement;
 const RUNTIME = chrome.runtime;
 const STORAGE = chrome.storage;
+const ALARMS = chrome.alarms;
 
 const select = (el, all = false) => {
   el = el.trim();
@@ -53,4 +54,4 @@ const resetStorage = (itemArr = null, all = false) => {
   };
 };
 
-export {  ELEMENT, RUNTIME, STORAGE, select, getElement, getTimeDefault, sortByTime, resetStorage };
+export {  ELEMENT, RUNTIME, STORAGE, ALARMS, select, getElement, getTimeDefault, sortByTime, resetStorage };
