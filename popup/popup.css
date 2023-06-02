@@ -38,8 +38,14 @@ body {
 }
 
 .note-label {
-  text-align: right;
   font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#notify-message {
+  width: 80%;
 }
 
 ::-webkit-scrollbar {

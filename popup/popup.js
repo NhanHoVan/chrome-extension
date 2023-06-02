@@ -5,6 +5,8 @@ import {
   getTimeDefault,
   sortByTime,
   resetStorage,
+  logError,
+  logMessage
 } from "../assets/js/common.js";
 (function () {
   "use strict";
@@ -12,8 +14,9 @@ import {
   var notificationsInit = [];
   const counter = getElement("notify-count");
   const timeInput = getElement("notify-date");
-  const messageInput = getElement("notify-mess");
+  const messageInput = getElement("input-message");
   const notifyList = getElement("notify-list");
+  const notifyMessage = getElement("notify-message");
 
   const resetInput = () => {
     messageInput.value = messageInput.defaultValue;
@@ -22,21 +25,36 @@ import {
 
   const assignInnerHtml = (notifications) => {
     counter.innerHTML = notifications.length;
-    notifyList.innerHTML = notificationsListTemplate(notifications);
+    while (notifyList.hasChildNodes()) {
+      notifyList.removeChild(notifyList.firstChild);
+    }
+    notifyList.appendChild(notificationsListTemplate(notifications));
     deleteFn(notifications);
   };
 
   const notificationsListTemplate = (notifications) => {
-    let str = "<ul>";
+    const renderUl = document.createElement("ul");
     if (notifications.length > 0) {
       notifications.forEach((ele) => {
-        let dateTime = moment(ele.time).format(" HH:mm DD-MM-YYYY");
-        str = str.concat(
-          `<li><p>${ele.message}</p><div><p class="date-time">${dateTime}</p><p class="close-button" id="close-${ele.id}">&#10006;</p></div></li>`
-        );
+        const renderLi = document.createElement("li");
+        const renderP = document.createElement("p");
+        renderP.textContent = ele.message;
+        const renderDiv = document.createElement("div");
+        const renderP1 = document.createElement("p");
+        renderP1.classList.add("date-time");
+        renderP1.textContent = moment(ele.time).format(" HH:mm DD-MM-YYYY");
+        renderDiv.appendChild(renderP1);
+        const renderP2 = document.createElement("p");
+        renderP2.classList.add("close-button");
+        renderP2.id = `close-${ele.id}`;
+        renderP2.innerHTML = "&#10006;";
+        renderDiv.appendChild(renderP2);
+        renderLi.appendChild(renderP);
+        renderLi.appendChild(renderDiv);
+        renderUl.appendChild(renderLi);
       });
     }
-    return str.concat("</ul>");
+    return renderUl;
   };
 
   const deleteFn = (notifications) => {
@@ -49,26 +67,37 @@ import {
         );
         if (itemId > -1) {
           notifications.splice(itemId, 1);
-          STORAGE.local.set({ notifications: JSON.stringify(notifications) });
+          try {
+            STORAGE.local.set({ notifications: JSON.stringify(notifications) });
+          } catch (error) {
+            logError(error);
+          }
         }
       });
     }
   };
 
   window.addEventListener("load", () => {
-    STORAGE.local.get(["notifications"], (data) => {
-      notificationsInit = data.notifications
-        ? JSON.parse(data.notifications)
-        : [];
-      assignInnerHtml(notificationsInit);
-    });
+    try {
+      STORAGE.local.get(["notifications"], (data) => {
+        notificationsInit = data.notifications
+          ? JSON.parse(data.notifications)
+          : [];
+        assignInnerHtml(notificationsInit);
+      });
+    } catch (error) {
+      logError(error);
+    }
 
     getElement("notify-date").value = getTimeDefault();
 
     getElement("notify-save").addEventListener("click", () => {
       let selectedTime = new Date(timeInput.value);
       if (selectedTime.getTime() <= Date.now()) {
-        alert("The time selected has passed.");
+        notifyMessage.appendChild(logMessage("The time selected has passed.", "error"));
+        setTimeout(() => {
+          notifyMessage.removeChild(notifyMessage.firstChild)
+        }, 3000);
       } else {
         let notificationData = {
           id: notificationsInit.length + 1,
@@ -77,7 +106,11 @@ import {
         };
         notificationsInit.push(notificationData);
         sortByTime(notificationsInit);
-        STORAGE.local.set({ notifications: JSON.stringify(notificationsInit) });
+        try {
+          STORAGE.local.set({ notifications: JSON.stringify(notificationsInit) });
+        } catch (error) {
+          logError(error);
+        }
         resetInput();
       }
     });

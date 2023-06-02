@@ -48,10 +48,28 @@ const resetStorage = (itemArr = null, all = false) => {
     STORAGE.local.remove(itemArr, function () {
       var error = RUNTIME.lastError;
       if (error) {
-        console.error(error);
+        logError(error);
       }
     });
   };
 };
 
-export {  ELEMENT, RUNTIME, STORAGE, ALARMS, select, getElement, getTimeDefault, sortByTime, resetStorage };
+const logError = (error) => {
+  const date = new Date();
+  const pad = (val, len = 2) => val.toString().padStart(len, '0');
+  const h = pad(date.getHours());
+  const m = pad(date.getMinutes());
+  const s = pad(date.getSeconds());
+  const ms = pad(date.getMilliseconds(), 3);
+  const time = `${h}:${m}:${s}.${ms}`;
+  console.log(`[${time}] ${error}`);
+};
+
+const logMessage = (message, type) => {
+  const renderMess = document.createElement('p');
+  renderMess.classList.add(`mess-${type}`)
+  renderMess.textContent = message;
+  return renderMess;
+};
+
+export {  ELEMENT, RUNTIME, STORAGE, ALARMS, select, getElement, getTimeDefault, sortByTime, resetStorage, logError, logMessage };
