@@ -1,4 +1,3 @@
-const ELEMENT = document.documentElement;
 const RUNTIME = chrome.runtime;
 const STORAGE = chrome.storage;
 const ALARMS = chrome.alarms;
@@ -72,4 +71,4 @@ const logMessage = (message, type) => {
   return renderMess;
 };
 
-export {  ELEMENT, RUNTIME, STORAGE, ALARMS, select, getElement, getTimeDefault, sortByTime, resetStorage, logError, logMessage };
+export {  RUNTIME, STORAGE, ALARMS, select, getElement, getTimeDefault, sortByTime, resetStorage, logError, logMessage };
